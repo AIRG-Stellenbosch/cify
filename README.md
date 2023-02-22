@@ -33,7 +33,7 @@ cd CIFY
 pip install -e .
 ```
 
-Using the following example to get started or refer to the documentation for more
+Use the following example to get started or refer to the documentation for more
 details.
 
 ```python

@@ -25,7 +25,7 @@ class PSO(Algorithm):
     def iterate(self, obj_func) -> None:
         gb = global_best(self.particles, obj_func)
         for particle in self.particles:
-            velocity = velocity(particle, gb, **self.velocity_params)
+            velocity = self.velocity(particle, gb, **self.velocity_params)
             particle.velocity = velocity
             particle.position = (particle.position + velocity).vector
             particle.evaluate(obj_func)

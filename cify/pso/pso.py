@@ -9,9 +9,13 @@ __all__ = ["PSO"]
 
 
 class PSO(Algorithm):
-    def __init__(self, n_particles: int, obj_func: ObjectiveFunction,
-                 velocity: Callable = std_velocity,
-                 velocity_params: dict = {}):
+    def __init__(
+        self,
+        n_particles: int,
+        obj_func: ObjectiveFunction,
+        velocity: Callable = std_velocity,
+        velocity_params: dict = {},
+    ):
         """
         :param n_particles: The number of particles in the Swarm.
         :param obj_func: The :class:`ObjectiveFunction` used to initialize the

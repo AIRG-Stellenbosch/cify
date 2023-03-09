@@ -55,7 +55,7 @@ class Optimization(Enum):
 
     def default(self):
         """
-        :return: A worst case value, i.e ``np.inf`` for ``Min`` and ``-np.inf`` 
+        :return: A worst case value, i.e ``np.inf`` for ``Min`` and ``-np.inf``
         for ``Max``.
         """
         if self.value == 1:

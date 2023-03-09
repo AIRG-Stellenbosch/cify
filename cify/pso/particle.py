@@ -57,7 +57,7 @@ class Particle(object):
     @position.setter
     def position(self, position):
         """Set's the :class:`Individual`'s ``position``."""
-        self.__position = Position(vector=position)
+        self.__position = Position(position)
 
     @velocity.setter
     def velocity(self, velocity):
@@ -71,6 +71,21 @@ class Particle(object):
     def evaluate(self, f: ObjectiveFunction):
         """Evaluates the :class:`Particle`'s position."""
         self.__position.eval(f)
+
+    def __eq__(self, other) -> bool:
+        return self.position == other.position
+
+    def __lt__(self, other) -> bool:
+        return self.position < other.position
+
+    def __le__(self, other) -> bool:
+        return self.position <= other.position
+
+    def __gt__(self, other) -> bool:
+        return self.position > other.position
+
+    def __ge__(self, other) -> bool:
+        return self.position >= other.position
 
     def __str__(self) -> str:
         """Returns a str representation of the :class:`Particle`."""

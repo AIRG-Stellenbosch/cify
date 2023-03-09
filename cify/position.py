@@ -1,5 +1,5 @@
 from functools import singledispatchmethod
-from typing import Union, List
+from typing import Union, List, Optional
 
 import numpy as np
 
@@ -14,7 +14,7 @@ class Position(object):
     @singledispatchmethod
     def __init__(
         self,
-        input: Union[np.ndarray, List, ObjectiveFunction],
+        input: Optional[Union[np.ndarray, List, ObjectiveFunction]],
     ):
         """
         :param vector: The position vector. This will always be
@@ -22,6 +22,8 @@ class Position(object):
         :param f: The :class:`ObjectiveFunction` to use for
         :class:`Position` evaluation.
         """
+        # print("XXXXXXXXXXXXXXXXXX")
+        # print(type(input))
         raise TypeError(f"Unexpected type, received f{type(input)}")
 
     @__init__.register(np.ndarray)
@@ -46,12 +48,26 @@ class Position(object):
                 self.__value = f.eval(self.vector)
             else:
                 self.__value = f.opt.default()
+        self.__f = f
+
+    @__init__.register(type(None))
+    def _(
+        self,
+        vector: Union[np.ndarray, list],
+        f: ObjectiveFunction,
+        eval_on_init: bool = True,
+    ):
+        self.__vector = vector
+        self.vector = f.sample()
+        self.__value = f.eval(self.vector) if eval_on_init else f.opt.default()
+        self.__f = f
 
     @__init__.register(ObjectiveFunction)
     def _(self, f: ObjectiveFunction, eval_on_init: bool = True):
         self.__vector = None
         self.vector = f.sample()
         self.__value = f.eval(self.vector) if eval_on_init else f.opt.default()
+        self.__f = f
 
     @property
     def vector(self) -> np.ndarray:
@@ -62,6 +78,11 @@ class Position(object):
     def value(self) -> float or list:
         """Returns the current value of the :class:`Position`."""
         return self.__value
+
+    @property
+    def f(self) -> ObjectiveFunction:
+        """Returns the :class:`ObjectiveFunction` of the :class:`Position`."""
+        return self.__f
 
     @vector.setter
     def vector(self, vector: np.ndarray or list):
@@ -83,7 +104,8 @@ class Position(object):
 
     def copy(self):
         """Returns a deep copy of the :class:`Position` object."""
-        return Position(vector=self.vector.copy(), value=self.value)
+        # return Position(vector=self.vector.copy(), value=self.value)
+        return Position(self.vector.copy(), self.f)
 
     def eval(self, f):
         """
